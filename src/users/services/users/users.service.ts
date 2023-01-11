@@ -1,5 +1,8 @@
 import { Injectable } from '@nestjs/common';
-import { CreateUserType } from 'src/utils/types';
+import { InjectRepository } from '@nestjs/typeorm';
+import { User } from 'src/typeorm/entities/user.entity';
+import { CreateUserParams } from 'src/utils/types';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class UsersService {
@@ -18,16 +21,23 @@ export class UsersService {
     },
   ];
 
+  constructor(
+    @InjectRepository(User) private userRepository: Repository<User>,
+  ) {}
+
   fetchUsers() {
-    return this.fakeUsers;
+    return this.userRepository.find();
   }
 
-  createUser(userData: CreateUserType) {
-    this.fakeUsers.push(userData);
-    return;
+  createUser(userData: CreateUserParams) {
+    const newUser = this.userRepository.create({
+      ...userData,
+      createdAt: new Date(),
+    });
+    return this.userRepository.save(newUser);
   }
 
   fetchUserById(id: number) {
-    return this.fakeUsers[id];
+    return this.userRepository.findOne({ where: { id } });
   }
 }

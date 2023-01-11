@@ -4,12 +4,15 @@ import {
   NestModule,
   RequestMethod,
 } from '@nestjs/common';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { User } from 'src/typeorm/entities/user.entity';
 import { UsersController } from './controllers/users/users.controller';
 import { AnotherOneMiddleware } from './middlewares/another-one/another-one.middleware';
 import { ExampleMiddleware } from './middlewares/example/example.middleware';
 import { UsersService } from './services/users/users.service';
 
 @Module({
+  imports: [TypeOrmModule.forFeature([User])],
   controllers: [UsersController],
   providers: [UsersService],
 })

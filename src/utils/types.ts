@@ -1,4 +1,6 @@
-export type CreateUserType = {
+export type CreateUserParams = {
   username: string;
   email: string;
+  password: string;
+  age: number;
 };

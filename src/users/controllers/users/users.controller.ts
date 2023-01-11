@@ -11,7 +11,6 @@ import {
   UsePipes,
   ValidationPipe,
 } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
 import { CreateUserDto } from 'src/users/dtos/createUser.dto';
 import { AuthGuard } from 'src/users/guards/auth/auth.guard';
 import { ValidateCreateUserPipe } from 'src/users/pipe/validate-create-user/validate-create-user.pipe';
@@ -23,22 +22,24 @@ export class UsersController {
 
   @Get()
   @UseGuards(AuthGuard)
-  getUsers() {
-    return this.usersService.fetchUsers();
+  async getUsers() {
+    const users = await this.usersService.fetchUsers();
+    return users;
   }
 
   @Post('create')
   @UsePipes(new ValidationPipe())
-  createUser(@Body(ValidateCreateUserPipe) userData: CreateUserDto) {
-    console.log(isNaN(userData.age));
-    return this.usersService.createUser(userData);
+  createUser(@Body(ValidateCreateUserPipe) createUserData: CreateUserDto) {
+    delete createUserData.confirmPassword;
+    return this.usersService.createUser(createUserData);
   }
 
   @Get(':id')
-  getUserById(@Param('id', ParseIntPipe) id: number) {
-    console.log(id);
-    const user = this.usersService.fetchUserById(id);
-    if (!user)
+  async getUserById(@Param('id', ParseIntPipe) id: number) {
+    const user = await this.usersService.fetchUserById(id);
+    if (!user) {
       throw new HttpException('User not found', HttpStatus.BAD_REQUEST);
+    }
+    return user;
   }
 }

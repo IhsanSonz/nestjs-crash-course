@@ -6,9 +6,9 @@ import { DatabaseModule } from './database/database.module';
 
 @Module({
   imports: [
-    ConfigModule.forRoot({ 
-      envFilePath: '.env', 
-      isGlobal: true, 
+    ConfigModule.forRoot({
+      envFilePath: '.env',
+      isGlobal: true,
       validationSchema: Joi.object({
         POSTGRES_HOST: Joi.string().required(),
         POSTGRES_PORT: Joi.string().required(),
@@ -17,8 +17,8 @@ import { DatabaseModule } from './database/database.module';
         POSTGRES_DATABASE: Joi.string().required(),
         PORT: Joi.string().required(),
       }),
-    }), 
-    DatabaseModule, 
+    }),
+    DatabaseModule,
     UsersModule,
   ],
   controllers: [],
